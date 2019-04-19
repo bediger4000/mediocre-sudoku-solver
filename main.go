@@ -50,14 +50,16 @@ func main() {
 		}
 
 		fmt.Printf("Filled in %d cells\n", totalFilled)
-		fmt.Printf(">>intermedite==\n")
+		fmt.Printf(">>intermediate==\n")
 		bd.PrintBoard(os.Stdout)
 	}
 	fmt.Printf("==final==\n")
 	bd.PrintBoard(os.Stdout)
 	if bd.IncompleteSolution() {
 		fmt.Printf("===Incomplete Solution===\n")
+		bd.CheckIntermediateValidity()
 	} else {
 		fmt.Printf("===Complete Solution===\n")
+		bd.CheckValidity()
 	}
 }
