@@ -52,6 +52,7 @@ func main() {
 		fmt.Printf("Filled in %d cells\n", totalFilled)
 		fmt.Printf(">>intermediate==\n")
 		bd.PrintBoard(os.Stdout)
+		bd.NakedSubset()
 	}
 	fmt.Printf("==final==\n")
 	bd.PrintBoard(os.Stdout)

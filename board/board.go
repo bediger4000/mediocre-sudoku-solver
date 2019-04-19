@@ -52,6 +52,15 @@ func (bd *Board) MarkSolved(row, col int, digit int) {
 	bd.EliminatePossibilities(row, col, bd[row][col].BlockNo, bd[row][col].Value)
 }
 
+func (bd *Board) SpliceOut(row, col, digitEliminate int) {
+	for idx, digit := range bd[row][col].Possible {
+		if digit == digitEliminate {
+			bd[row][col].Possible = append(bd[row][col].Possible[:idx], bd[row][col].Possible[idx+1:]...)
+			break
+		}
+	}
+}
+
 func (bd *Board) EliminatePossibilities(rowEliminate, colEliminate, blockEliminate, digitEliminate int) {
 	for col := 0; col < 9; col++ {
 		if bd[rowEliminate][col].Solved {
