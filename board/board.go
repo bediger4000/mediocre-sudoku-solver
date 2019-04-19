@@ -42,23 +42,17 @@ func NewBoard() *Board {
 		}
 	}
 
-	if n := bd.OnlyPossibility(); n != 0 {
-		fmt.Printf("Solved %d cells\n", n)
-	}
-
 	return &bd
 }
 
-func (bd *Board) MarkSolved(row, col int) {
-	bd[row][col].Value = bd[row][col].Possible[0]
+func (bd *Board) MarkSolved(row, col int, digit int) {
+	bd[row][col].Value = digit
 	bd[row][col].Possible = []int{}
 	bd[row][col].Solved = true
-	fmt.Printf("MarkSolved ")
 	bd.EliminatePossibilities(row, col, bd[row][col].BlockNo, bd[row][col].Value)
 }
 
 func (bd *Board) EliminatePossibilities(rowEliminate, colEliminate, blockEliminate, digitEliminate int) {
-	fmt.Printf("Eliminate %d in row %d, or col %d or block %d\n", digitEliminate, rowEliminate, colEliminate, blockEliminate)
 	for col := 0; col < 9; col++ {
 		if bd[rowEliminate][col].Solved {
 			continue
@@ -68,7 +62,6 @@ func (bd *Board) EliminatePossibilities(rowEliminate, colEliminate, blockElimina
 		}
 		for idx, digit := range bd[rowEliminate][col].Possible {
 			if digit == digitEliminate {
-				fmt.Printf("Eliminate %d in cell <%d,%d>\n", digit, rowEliminate, col)
 				bd[rowEliminate][col].Possible = append(bd[rowEliminate][col].Possible[:idx], bd[rowEliminate][col].Possible[idx+1:]...)
 				break
 			}
@@ -83,7 +76,6 @@ func (bd *Board) EliminatePossibilities(rowEliminate, colEliminate, blockElimina
 		}
 		for idx, digit := range bd[row][colEliminate].Possible {
 			if digit == digitEliminate {
-				fmt.Printf("Eliminate %d in cell <%d,%d>\n", digit, row, colEliminate)
 				bd[row][colEliminate].Possible = append(bd[row][colEliminate].Possible[:idx], bd[row][colEliminate].Possible[idx+1:]...)
 				break
 			}
@@ -99,10 +91,20 @@ func (bd *Board) EliminatePossibilities(rowEliminate, colEliminate, blockElimina
 		}
 		for idx, digit := range bd[coord.X][coord.Y].Possible {
 			if digit == digitEliminate {
-				fmt.Printf("Eliminate %d in cell <%d,%d>\n", digit, coord.X, coord.Y)
 				bd[coord.X][coord.Y].Possible = append(bd[coord.X][coord.Y].Possible[:idx], bd[coord.X][coord.Y].Possible[idx+1:]...)
 				break
 			}
 		}
 	}
+}
+
+func (bd *Board) IncompleteSolution() bool {
+	for row := 0; row < 9; row++ {
+		for col := 0; col < 9; col++ {
+			if !bd[row][col].Solved {
+				return true
+			}
+		}
+	}
+	return false
 }

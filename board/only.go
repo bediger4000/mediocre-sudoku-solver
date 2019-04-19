@@ -6,7 +6,7 @@ func (bd *Board) OnlyPossibility() int {
 		for col := 0; col < 9; col++ {
 			if !bd[row][col].Solved {
 				if len(bd[row][col].Possible) == 1 {
-					bd.MarkSolved(row, col)
+					bd.MarkSolved(row, col, bd[row][col].Possible[0])
 					found++
 				}
 			}

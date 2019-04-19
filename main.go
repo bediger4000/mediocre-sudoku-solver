@@ -17,6 +17,7 @@ func main() {
 	flag.Parse()
 
 	bd := board.ReadBoard(os.Stdin)
+	board.ValidateCells()
 
 	if *psOutputNamePtr != "" {
 		fd, err := os.Create(*psOutputNamePtr)
@@ -33,7 +34,30 @@ func main() {
 		return
 	}
 
-	n := bd.OnlyPossibility()
-	fmt.Printf("Filled in %d cells\n", n)
-	board.ValidateCells()
+	totalFilled := 1
+	for totalFilled > 0 {
+		totalFilled = 0
+		n := 1
+		for n > 0 {
+			n = bd.OnlyPossibility()
+			totalFilled += n
+		}
+
+		n = 1
+		for n > 0 {
+			n = bd.BlockOnly()
+			totalFilled += n
+		}
+
+		fmt.Printf("Filled in %d cells\n", totalFilled)
+		fmt.Printf(">>intermedite==\n")
+		bd.PrintBoard(os.Stdout)
+	}
+	fmt.Printf("==final==\n")
+	bd.PrintBoard(os.Stdout)
+	if bd.IncompleteSolution() {
+		fmt.Printf("===Incomplete Solution===\n")
+	} else {
+		fmt.Printf("===Complete Solution===\n")
+	}
 }

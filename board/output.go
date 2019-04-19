@@ -51,7 +51,6 @@ func ReadBoard(in io.Reader) *Board {
 				log.Fatalf("Numbers must be less than 10, greater than zero: %d (%c)\n", n, c)
 			}
 			if n != 0 {
-				fmt.Printf("Setting <%d,%d> to %d solved\n", row, col, n)
 				bd[row][col].Value = n
 				bd[row][col].Solved = true
 				bd[row][col].Possible = []int{n}
