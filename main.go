@@ -24,7 +24,7 @@ func main() {
 		if err != nil {
 			log.Fatalf("opening %q: %v", *psOutputNamePtr, err)
 		}
-		bd.EmitPostScript(fd)
+		bd.EmitPostScript(fd, printPossibleExit)
 		fd.Close()
 		return
 	}

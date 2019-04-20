@@ -5,7 +5,20 @@ import (
 	"io"
 )
 
-func (bd *Board) EmitPostScript(out io.Writer) {
+var digitOffsets [10]CellCoord = [10]CellCoord{
+	CellCoord{0, 0},
+	CellCoord{-17, 17},
+	CellCoord{0, 17},
+	CellCoord{17, 17},
+	CellCoord{-17, 0},
+	CellCoord{0, 0},
+	CellCoord{17, 0},
+	CellCoord{-17, -17},
+	CellCoord{0, -17},
+	CellCoord{17, -17},
+}
+
+func (bd *Board) EmitPostScript(out io.Writer, printPossibles bool) {
 	out.Write([]byte(PSHeader))
 	/*
 		94 94 moveto
@@ -17,10 +30,20 @@ func (bd *Board) EmitPostScript(out io.Writer) {
 	*/
 	for row := 0; row < 9; row++ {
 		for col := 0; col < 9; col++ {
+			xoffset := 50*col + 94
+			yoffset := 494 - 50*row
 			if bd[row][col].Solved {
-				xoffset := 50*col + 94
-				yoffset := 494 - 50*row
 				out.Write([]byte(fmt.Sprintf("%d %d moveto\n(%d) show\n", xoffset, yoffset, bd[row][col].Value)))
+			} else if printPossibles {
+				out.Write([]byte("/Times-Roman findfont\n9 scalefont\nsetfont\n"))
+				for _, digit := range bd[row][col].Possible {
+					if digit == 0 {
+						continue
+					}
+					digitOffset := digitOffsets[digit]
+					out.Write([]byte(fmt.Sprintf("%d %d moveto\n(%d) show\n", xoffset+digitOffset.X, yoffset+digitOffset.Y, digit)))
+				}
+				out.Write([]byte("/Times-Roman findfont\n22 scalefont\nsetfont\n"))
 			}
 		}
 	}
