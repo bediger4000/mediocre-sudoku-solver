@@ -69,12 +69,7 @@ func (bd *Board) EliminatePossibilities(rowEliminate, colEliminate, blockElimina
 		if col == colEliminate {
 			continue
 		}
-		for idx, digit := range bd[rowEliminate][col].Possible {
-			if digit == digitEliminate {
-				bd[rowEliminate][col].Possible = append(bd[rowEliminate][col].Possible[:idx], bd[rowEliminate][col].Possible[idx+1:]...)
-				break
-			}
-		}
+		bd.SpliceOut(rowEliminate, col, digitEliminate)
 	}
 	for row := 0; row < 9; row++ {
 		if bd[row][colEliminate].Solved {
@@ -83,12 +78,7 @@ func (bd *Board) EliminatePossibilities(rowEliminate, colEliminate, blockElimina
 		if row == rowEliminate {
 			continue
 		}
-		for idx, digit := range bd[row][colEliminate].Possible {
-			if digit == digitEliminate {
-				bd[row][colEliminate].Possible = append(bd[row][colEliminate].Possible[:idx], bd[row][colEliminate].Possible[idx+1:]...)
-				break
-			}
-		}
+		bd.SpliceOut(row, colEliminate, digitEliminate)
 	}
 
 	for _, coord := range Blocks[blockEliminate] {
@@ -98,12 +88,7 @@ func (bd *Board) EliminatePossibilities(rowEliminate, colEliminate, blockElimina
 		if bd[coord.X][coord.Y].Solved {
 			continue
 		}
-		for idx, digit := range bd[coord.X][coord.Y].Possible {
-			if digit == digitEliminate {
-				bd[coord.X][coord.Y].Possible = append(bd[coord.X][coord.Y].Possible[:idx], bd[coord.X][coord.Y].Possible[idx+1:]...)
-				break
-			}
-		}
+		bd.SpliceOut(coord.X, coord.Y, digitEliminate)
 	}
 }
 
