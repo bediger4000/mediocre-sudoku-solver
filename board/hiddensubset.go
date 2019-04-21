@@ -1,71 +1,74 @@
 package board
 
-import "fmt"
-
 func (bd *Board) HiddenSubset() int {
-	fmt.Printf("Enter HiddenSubset\n")
-	defer fmt.Printf("Exit HiddenSubset\n")
+	//fmt.Printf("Enter HiddenSubset\n")
+	//defer fmt.Printf("Exit HiddenSubset\n")
 	for col := 0; col < 9; col++ {
-		if bd.CountUnsolvedRows(col) < 3 {
+		if u := bd.CountUnsolvedRows(col); u < 3 {
+			//fmt.Printf("Col %d only has %d unsolved rows\n", col, u)
 			continue
-		}
-		digitCounts := bd.CountPossibleDigits(ColumnThing, col)
-		l, m, n, doesNot := mightHaveHiddenSubset(digitCounts)
-		if doesNot {
-			fmt.Printf("Col %d does not\n", col)
-			continue
-		}
-		// Find only 2 cells with l,m,n as possible, just one other cell with n as possible
-		all3Digits := []int{} // row numbers
-		just1Digit := 0       // row number
-		for row := 0; row < 9; row++ {
-			count := countDigits(l, m, n, bd[row][col].Possible)
-			switch count {
-			case 3:
-				all3Digits = append(all3Digits, row)
-			case 1:
-				just1Digit = row
+		} //else {
+		//	fmt.Printf("Considering col %d for hidden subset, %d unsolved rows\n", col, u)
+		//}
+
+		triples := [][]int{}
+		triplesRows := [][2]int{}
+		for i := 0; i < 8; i++ {
+			if bd[i][col].Solved {
+				// fmt.Printf("->Col %d row %d solved with %d\n", col, i, bd[i][col].Value)
+				continue
+			}
+			// fmt.Printf("- Comparing Col %d, row %d against subsequent rows for common digits\n", col, i)
+			for j := i + 1; j < 9; j++ {
+				if bd[j][col].Solved {
+					// fmt.Printf("-->Col %d row %d solved with %d\n", col, j, bd[j][col].Value)
+					continue
+				}
+				common := commonDigits(bd[i][col].Possible, bd[j][col].Possible)
+				// fmt.Printf("Col %d, rows %d & %d common digits: %v\n", col, i, j, common)
+				if len(common) == 3 {
+					triples = append(triples, common)
+					triplesRows = append(triplesRows, [2]int{i, j})
+				}
 			}
 		}
-		if len(all3Digits) != 2 {
+
+		if len(triples) != 1 {
+			// fmt.Printf("Column %d only has %d triples\n", col, len(triples))
 			continue
 		}
-		// col,{all3Digits...} can only have l,m in them
-		// col,just1Digit has n in it
-		fmt.Printf("Col %d has hidden subset [%d,%d,%d] at rows %v, %d out\n",
-			col, l, m, n, all3Digits, just1Digit,
-		)
-	}
-	return 0
-}
 
-// 2 cells with the same triplet, and only one cell that has
-// one digit of the triple, the other 2 digits only in the 2 cells
-// 2 digits with a 2-count, one digit with a 3-count
-func mightHaveHiddenSubset(digitCounts [10]int) (int, int, int, bool) {
-	fmt.Printf("Enter mightHaveHiddenSubsets %v\n", digitCounts)
-	defer fmt.Printf("Exit mightHaveHiddenSubsets\n")
-	twoCounts := 0
-	threeCounts := 0
-	twoCountDigits := make([]int, 0)
-	threeCountDigit := 0
-	for digit, count := range digitCounts {
-		switch count {
-		case 2:
-			twoCountDigits = append(twoCountDigits, digit)
-			twoCounts++
-		case 3:
-			threeCountDigit = digit
-			threeCounts++
+		for idx, triplet := range triples {
+			r1 := triplesRows[idx][0]
+			r2 := triplesRows[idx][1]
+			// fmt.Printf("Col %d, rows %d,%d have %v in common\n", col, r1, r2, triplet)
+			for _, digit := range triplet {
+				singleDigits := []int{}
+				singleDigitRows := []int{}
+				for row := 0; row < 9; row++ {
+					if row != r1 && row != r2 && !bd[row][col].Solved {
+						for _, single := range bd[row][col].Possible {
+							if single == 0 {
+								continue
+							}
+							if single == digit {
+								singleDigits = append(singleDigits, digit)
+								singleDigitRows = append(singleDigitRows, row)
+
+							}
+						}
+					}
+				}
+				if len(singleDigits) == 1 {
+					//fmt.Printf("Column %d Row %d has a single %d in it, hidden subset with rows %d & %d\n",
+					//	col, singleDigitRows[0], singleDigits[0], r1, r2)
+					// Column col, row singleDigitRows[0] has solved value singleDigits[0].
+					bd.MarkSolved(singleDigitRows[0], col, singleDigits[0])
+				}
+			}
 		}
 	}
-	if twoCounts != 2 || threeCounts != 1 {
-		fmt.Printf("Not a HiddenSubset 2-counts: %d, 3-counts: %d\n", twoCounts, threeCounts)
-		return 0, 0, 0, false
-	}
-
-	fmt.Printf("maybe a HiddenSubset [%d,%d,%d]\n", twoCountDigits[0], twoCountDigits[1], threeCountDigit)
-	return twoCountDigits[0], twoCountDigits[1], threeCountDigit, true
+	return 0
 }
 
 func (bd *Board) CountUnsolvedRows(col int) int {
@@ -78,17 +81,16 @@ func (bd *Board) CountUnsolvedRows(col int) int {
 	return unsolvedRows
 }
 
-func countDigits(l, m, n int, ary []int) int {
-	count := 0
-	for _, x := range ary {
-		switch {
-		case l == x:
-			count++
-		case m == x:
-			count++
-		case n == x:
-			count++
+func commonDigits(poss1 []int, poss2 []int) []int {
+
+	var common []int
+	for _, digit := range poss1 {
+		for _, otherdigit := range poss2 {
+			if digit == otherdigit {
+				common = append(common, digit)
+			}
 		}
 	}
-	return count
+
+	return common
 }
