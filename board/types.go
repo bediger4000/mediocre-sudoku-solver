@@ -33,3 +33,11 @@ var Blocks [9]Block = [9]Block{
 }
 
 var Cells []*Cell
+
+type ThingType int
+
+const (
+	RowThing    ThingType = 0
+	ColumnThing ThingType = iota
+	BlockThing  ThingType = iota
+)
