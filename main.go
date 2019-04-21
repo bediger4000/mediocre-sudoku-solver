@@ -49,6 +49,12 @@ func main() {
 			totalFilled += n
 		}
 
+		n = 1
+		for n > 0 {
+			n = bd.HiddenSubset()
+			totalFilled += n
+		}
+
 		fmt.Printf("Filled in %d cells\n", totalFilled)
 		fmt.Printf(">>intermediate==\n")
 		bd.PrintBoard(os.Stdout)
