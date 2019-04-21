@@ -102,3 +102,47 @@ func (bd *Board) IncompleteSolution() bool {
 	}
 	return false
 }
+
+func (bd *Board) CountPossibleDigits(typ ThingType, n int) [10]int {
+	digitCount := [10]int{}
+	for i := 0; i < 9; i++ {
+		var x, y int
+		switch typ {
+		case ColumnThing: // x used as row number
+			x, y = i, n
+		case RowThing: // x used as col number
+			x, y = n, i
+		case BlockThing: // x used as cell number in block
+			block := Blocks[n]
+			cell := block[i]
+			x, y = cell.X, cell.Y
+		}
+		if !bd[x][y].Solved {
+			for _, digit := range bd[x][y].Possible {
+				digitCount[digit]++
+			}
+		}
+	}
+	return digitCount
+}
+
+func (bd *Board) CountSolvedDigits(typ ThingType, n int) [10]int {
+	digitCount := [10]int{}
+	for i := 0; i < 9; i++ {
+		var x, y int
+		switch typ {
+		case ColumnThing: // x used as row number
+			x, y = i, n
+		case RowThing: // x used as col number
+			x, y = n, i
+		case BlockThing: // x used as cell number in block
+			block := Blocks[n]
+			cell := block[i]
+			x, y = cell.X, cell.Y
+		}
+		if bd[x][y].Solved {
+			digitCount[bd[x][y].Value]++
+		}
+	}
+	return digitCount
+}
