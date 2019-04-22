@@ -3,6 +3,7 @@ package board
 func (bd *Board) HiddenSubset() int {
 	//fmt.Printf("Enter HiddenSubset\n")
 	//defer fmt.Printf("Exit HiddenSubset\n")
+	solved := 0
 	for col := 0; col < 9; col++ {
 		if u := bd.CountUnsolvedRows(col); u < 3 {
 			//fmt.Printf("Col %d only has %d unsolved rows\n", col, u)
@@ -64,11 +65,12 @@ func (bd *Board) HiddenSubset() int {
 					//	col, singleDigitRows[0], singleDigits[0], r1, r2)
 					// Column col, row singleDigitRows[0] has solved value singleDigits[0].
 					bd.MarkSolved(singleDigitRows[0], col, singleDigits[0])
+					solved++
 				}
 			}
 		}
 	}
-	return 0
+	return solved
 }
 
 func (bd *Board) CountUnsolvedRows(col int) int {
