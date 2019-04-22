@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"os"
 )
 
 func (bd *Board) PrintBoard(out io.Writer) {
@@ -24,7 +23,7 @@ func (bd *Board) PrintBoard(out io.Writer) {
 
 func ReadBoard(in io.Reader) *Board {
 	bd := NewBoard()
-	r := bufio.NewReader(os.Stdin)
+	r := bufio.NewReader(in)
 	for row := 0; row < 9; {
 		buf, err := r.ReadBytes('\n')
 		if err != nil {
