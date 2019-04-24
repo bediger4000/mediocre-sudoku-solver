@@ -1,6 +1,8 @@
 package board
 
-func (bd *Board) HiddenSubset() int {
+import "fmt"
+
+func (bd *Board) HiddenSubset(announceSolution bool) int {
 	//fmt.Printf("Enter HiddenSubset\n")
 	//defer fmt.Printf("Exit HiddenSubset\n")
 	solved := 0
@@ -64,6 +66,9 @@ func (bd *Board) HiddenSubset() int {
 					//fmt.Printf("Column %d Row %d has a single %d in it, hidden subset with rows %d & %d\n",
 					//	col, singleDigitRows[0], singleDigits[0], r1, r2)
 					// Column col, row singleDigitRows[0] has solved value singleDigits[0].
+					if announceSolution {
+						fmt.Printf("Mark <%d,%d> solved with %d, hidden subset\n", singleDigitRows[0], col, singleDigits[0])
+					}
 					bd.MarkSolved(singleDigitRows[0], col, singleDigits[0])
 					solved++
 				}

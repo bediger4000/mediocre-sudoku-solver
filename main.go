@@ -11,8 +11,10 @@ import (
 func main() {
 	var printPossible bool
 	var printPossibleExit bool
+	var announceSolution bool
 	flag.BoolVar(&printPossible, "c", false, "on incomplete solution, print digit possibilities")
 	flag.BoolVar(&printPossibleExit, "C", false, "read input board, print digit possibilities, exit")
+	flag.BoolVar(&announceSolution, "a", false, "announce solutions of cells")
 	psOutputNamePtr := flag.String("p", "", "PostScript output file name")
 	flag.Parse()
 
@@ -39,21 +41,23 @@ func main() {
 		totalFilled = 0
 		n := 1
 		for n > 0 {
-			n = bd.OnlyPossibility()
+			n = bd.OnlyPossibility(announceSolution)
 			totalFilled += n
 		}
 
 		n = 1
 		for n > 0 {
-			n = bd.BlockOnly()
+			n = bd.BlockOnly(announceSolution)
 			totalFilled += n
 		}
 
-		n = 1
-		for n > 0 {
-			n = bd.HiddenSubset()
-			totalFilled += n
-		}
+		/*
+			n = 1
+			for n > 0 {
+				n = bd.HiddenSubset(announceSolution)
+				totalFilled += n
+			}
+		*/
 
 		fmt.Printf("Filled in %d cells\n", totalFilled)
 		fmt.Printf(">>intermediate==\n")

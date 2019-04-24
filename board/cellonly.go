@@ -1,6 +1,8 @@
 package board
 
-func (bd *Board) BlockOnly() int {
+import "fmt"
+
+func (bd *Board) BlockOnly(announceSolution bool) int {
 	found := 0
 	for blockno, block := range Blocks {
 		digitCount := bd.CountPossibleDigits(BlockThing, blockno)
@@ -10,6 +12,9 @@ func (bd *Board) BlockOnly() int {
 				for _, cell := range block {
 					for _, possibleDigit := range bd[cell.X][cell.Y].Possible {
 						if possibleDigit == digit {
+							if announceSolution {
+								fmt.Printf("Mark <%d,%d> solved with %d, only possible digit for block\n", cell.X, cell.Y, digit)
+							}
 							bd.MarkSolved(cell.X, cell.Y, digit)
 							found++
 							break
