@@ -12,11 +12,17 @@ func main() {
 	var printPossible bool
 	var printPossibleExit bool
 	var announceSolution bool
+	var testingOutput bool
 	flag.BoolVar(&printPossible, "c", false, "on incomplete solution, print digit possibilities")
 	flag.BoolVar(&printPossibleExit, "C", false, "read input board, print digit possibilities, exit")
 	flag.BoolVar(&announceSolution, "a", false, "announce solutions of cells")
+	flag.BoolVar(&testingOutput, "f", false, "final solution output only")
 	psOutputNamePtr := flag.String("p", "", "PostScript output file name")
 	flag.Parse()
+
+	if !testingOutput {
+		announceSolution = false
+	}
 
 	bd := board.ReadBoard(os.Stdin)
 	board.ValidateCells()
@@ -59,18 +65,25 @@ func main() {
 			}
 		*/
 
-		fmt.Printf("Filled in %d cells\n", totalFilled)
-		fmt.Printf(">>intermediate==\n")
-		bd.PrintBoard(os.Stdout)
+		if !testingOutput {
+			fmt.Printf("Filled in %d cells\n", totalFilled)
+			fmt.Printf(">>intermediate==\n")
+			bd.PrintBoard(os.Stdout)
+		}
+
 		bd.NakedSubset()
 	}
-	fmt.Printf("==final==\n")
+	if !testingOutput {
+		fmt.Printf("==final==\n")
+	}
 	bd.PrintBoard(os.Stdout)
-	if bd.IncompleteSolution() {
-		fmt.Printf("===Incomplete Solution===\n")
-		bd.CheckIntermediateValidity()
-	} else {
-		fmt.Printf("===Complete Solution===\n")
-		bd.CheckValidity()
+	if !testingOutput {
+		if bd.IncompleteSolution() {
+			fmt.Printf("===Incomplete Solution===\n")
+			bd.CheckIntermediateValidity()
+		} else {
+			fmt.Printf("===Complete Solution===\n")
+			bd.CheckValidity()
+		}
 	}
 }
