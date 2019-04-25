@@ -1,0 +1,31 @@
+#!/bin/bash
+
+if [[ ! -x ./sudoku ]]
+then
+	go build sudoku
+fi
+
+rm -rf output
+mkdir output
+
+for IN in tests/[0-9][0-9]
+do
+	B=$(basename $IN)
+	OUT=output/$B
+
+	echo $B
+
+	if ./sudoku -f < $IN > $OUT
+	then
+		if diff desired/$B $OUT > /dev/null
+		then
+			:
+		else
+			echo "Problem with test $B"
+			echo "diff {output,desired}/$B"
+			echo "./cmp {output,desired}/$B"
+		fi
+	else
+		echo "Problem with sudoku on $IN: $?"
+	fi
+done

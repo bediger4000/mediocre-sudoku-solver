@@ -20,7 +20,7 @@ func main() {
 	psOutputNamePtr := flag.String("p", "", "PostScript output file name")
 	flag.Parse()
 
-	if !testingOutput {
+	if testingOutput {
 		announceSolution = false
 	}
 
@@ -57,13 +57,11 @@ func main() {
 			totalFilled += n
 		}
 
-		/*
-			n = 1
-			for n > 0 {
-				n = bd.HiddenSubset(announceSolution)
-				totalFilled += n
-			}
-		*/
+		n = 1
+		for n > 0 {
+			n = bd.HiddenSubset(announceSolution)
+			totalFilled += n
+		}
 
 		if !testingOutput {
 			fmt.Printf("Filled in %d cells\n", totalFilled)
@@ -71,7 +69,9 @@ func main() {
 			bd.PrintBoard(os.Stdout)
 		}
 
-		bd.NakedSubset()
+		if totalFilled == 0 {
+			bd.NakedSubset()
+		}
 	}
 	if !testingOutput {
 		fmt.Printf("==final==\n")
