@@ -13,10 +13,14 @@ func main() {
 	var printPossibleExit bool
 	var announceSolution bool
 	var testingOutput bool
+	var doNakedSubset bool
+	var doHiddenSubset bool
 	flag.BoolVar(&printPossible, "c", false, "on incomplete solution, print digit possibilities")
 	flag.BoolVar(&printPossibleExit, "C", false, "read input board, print digit possibilities, exit")
 	flag.BoolVar(&announceSolution, "a", false, "announce solutions of cells")
 	flag.BoolVar(&testingOutput, "f", false, "final solution output only")
+	flag.BoolVar(&doNakedSubset, "N", false, "perform naked subset solving")
+	flag.BoolVar(&doHiddenSubset, "H", false, "perform hidden subset elimination")
 	psOutputNamePtr := flag.String("p", "", "PostScript output file name")
 	flag.Parse()
 
@@ -57,10 +61,13 @@ func main() {
 			totalFilled += n
 		}
 
-		n = 1
-		for n > 0 {
-			n = bd.HiddenSubset(announceSolution)
-			totalFilled += n
+		if doHiddenSubset {
+			// m number of hidden pairs discovered
+			m := bd.HiddenPair(announceSolution)
+			if totalFilled == 0 && m > 0 {
+				totalFilled += bd.OnlyPossibility(announceSolution)
+				totalFilled += bd.BlockOnly(announceSolution)
+			}
 		}
 
 		if !testingOutput {
@@ -69,8 +76,12 @@ func main() {
 			bd.PrintBoard(os.Stdout)
 		}
 
-		if totalFilled == 0 {
-			bd.NakedSubset()
+		if doNakedSubset {
+			if totalFilled == 0 {
+				if bd.NakedSubset() {
+					totalFilled = 1
+				}
+			}
 		}
 	}
 	if !testingOutput {
