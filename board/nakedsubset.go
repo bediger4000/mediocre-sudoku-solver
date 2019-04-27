@@ -1,8 +1,8 @@
 package board
 
-func (bd *Board) NakedSubset() bool {
+func (bd *Board) NakedSubset() int {
 
-	var foundSome bool
+	foundSome := 0
 
 	for row := 0; row < 9; row++ {
 		twoCounts := 0
@@ -36,8 +36,8 @@ func (bd *Board) NakedSubset() bool {
 						continue
 					}
 					// Splice either of the two digits out of bd[row][c].Possible
-					foundSome = foundSome || bd.SpliceOut(row, c, bd[row][twoCols[0]].Possible[0])
-					foundSome = foundSome || bd.SpliceOut(row, c, bd[row][twoCols[0]].Possible[1])
+					foundSome += bd.SpliceOut(row, c, bd[row][twoCols[0]].Possible[0])
+					foundSome += bd.SpliceOut(row, c, bd[row][twoCols[0]].Possible[1])
 				}
 			}
 		}
@@ -75,8 +75,8 @@ func (bd *Board) NakedSubset() bool {
 						continue
 					}
 					// Splice either of the two digits out of bd[row][c].Possible
-					foundSome = foundSome || bd.SpliceOut(r, col, bd[twoRows[0]][col].Possible[0])
-					foundSome = foundSome || bd.SpliceOut(r, col, bd[twoRows[0]][col].Possible[1])
+					foundSome += bd.SpliceOut(r, col, bd[twoRows[0]][col].Possible[0])
+					foundSome += bd.SpliceOut(r, col, bd[twoRows[0]][col].Possible[1])
 				}
 			}
 		}
@@ -120,8 +120,8 @@ func (bd *Board) NakedSubset() bool {
 						continue
 					}
 					// Splice either of the two digits out of bd[row][c].Possible
-					foundSome = foundSome || bd.SpliceOut(cell.X, cell.Y, bd[X0][Y0].Possible[0])
-					foundSome = foundSome || bd.SpliceOut(cell.X, cell.Y, bd[X0][Y0].Possible[1])
+					foundSome += bd.SpliceOut(cell.X, cell.Y, bd[X0][Y0].Possible[0])
+					foundSome += bd.SpliceOut(cell.X, cell.Y, bd[X0][Y0].Possible[1])
 				}
 			}
 		}

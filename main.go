@@ -78,7 +78,7 @@ func main() {
 
 		if doNakedSubset {
 			if totalFilled == 0 {
-				if bd.NakedSubset() {
+				if bd.NakedSubset() > 0 {
 					totalFilled = 1
 				}
 			}
