@@ -52,16 +52,18 @@ func (bd *Board) MarkSolved(row, col int, digit int) {
 	bd.EliminatePossibilities(row, col, bd[row][col].BlockNo, bd[row][col].Value)
 }
 
-func (bd *Board) SpliceOut(row, col, digitEliminate int) bool {
-	found := false
+// SpliceOut will eliminate at most 1 digit.
+// Also, it modifies bd[row][col].Solved slice
+func (bd *Board) SpliceOut(row, col, digitEliminate int) int {
+	eliminated := 0
 	for idx, digit := range bd[row][col].Possible {
 		if digit == digitEliminate {
 			bd[row][col].Possible = append(bd[row][col].Possible[:idx], bd[row][col].Possible[idx+1:]...)
-			found = true
+			eliminated = 1
 			break
 		}
 	}
-	return found
+	return eliminated
 }
 
 func (bd *Board) EliminatePossibilities(rowEliminate, colEliminate, blockEliminate, digitEliminate int) {
