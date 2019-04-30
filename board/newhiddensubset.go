@@ -2,7 +2,7 @@ package board
 
 import "fmt"
 
-func (bd *Board) HiddenPair(announceSolutions bool) int {
+func (bd *Board) HiddenPair(announce bool) int {
 	eliminated := 0
 	for colNo, column := range Columns {
 		digitMap := make(map[int][]CellCoord)
@@ -30,13 +30,13 @@ func (bd *Board) HiddenPair(announceSolutions bool) int {
 						continue
 					}
 					if pairOfCellsEqual(cells, otherCells) {
-						if announceSolutions {
+						if announce {
 							fmt.Printf("Column %d: %d & %d a hidden pair in %v and %v\n",
 								colNo, digit, otherDigit, cells, otherCells)
 						}
 						pairedAlready[digit] = true
 						pairedAlready[otherDigit] = true
-						eliminated += cleanHiddenPair(bd, digit, otherDigit, cells)
+						eliminated += cleanHiddenPair(bd, digit, otherDigit, cells, announce)
 					}
 				}
 			}
@@ -68,13 +68,13 @@ func (bd *Board) HiddenPair(announceSolutions bool) int {
 						continue
 					}
 					if pairOfCellsEqual(cells, otherCells) {
-						if announceSolutions {
+						if announce {
 							fmt.Printf("Row %d: %d & %d a hidden pair in %v and %v\n",
 								rowNo, digit, otherDigit, cells, otherCells)
 						}
 						pairedAlready[digit] = true
 						pairedAlready[otherDigit] = true
-						eliminated += cleanHiddenPair(bd, digit, otherDigit, cells)
+						eliminated += cleanHiddenPair(bd, digit, otherDigit, cells, announce)
 					}
 				}
 			}
@@ -106,13 +106,13 @@ func (bd *Board) HiddenPair(announceSolutions bool) int {
 						continue
 					}
 					if pairOfCellsEqual(cells, otherCells) {
-						if announceSolutions {
+						if announce {
 							fmt.Printf("Block %d: %d & %d a hidden pair in %v and %v\n",
 								blockNo, digit, otherDigit, cells, otherCells)
 						}
 						pairedAlready[digit] = true
 						pairedAlready[otherDigit] = true
-						eliminated += cleanHiddenPair(bd, digit, otherDigit, cells)
+						eliminated += cleanHiddenPair(bd, digit, otherDigit, cells, announce)
 						// For the block case, it's possible to eliminate the
 						// digits of the hidden pair from other cells,
 						// if the pair shows up in the same row or column.
@@ -168,14 +168,18 @@ func cellsEqual(a, b CellCoord) bool {
 	return a.X == b.X && a.Y == b.Y
 }
 
-func cleanHiddenPair(bd *Board, digit int, otherDigit int, cells []CellCoord) int {
+func cleanHiddenPair(bd *Board, digit int, otherDigit int, cells []CellCoord, announce bool) int {
 	eliminated := 0
 	for _, cell := range cells {
 		maybeDigits := make([]int, len(bd[cell.X][cell.Y].Possible))
 		copy(maybeDigits, bd[cell.X][cell.Y].Possible)
 		for _, possibleDigit := range maybeDigits {
 			if (possibleDigit != digit) && possibleDigit != otherDigit {
-				eliminated += bd.SpliceOut(cell.X, cell.Y, possibleDigit)
+				n := bd.SpliceOut(cell.X, cell.Y, possibleDigit)
+				if n > 0 && announce {
+					fmt.Printf("Eliminated %d from <%d,%d>\n", possibleDigit, cell.X, cell.Y)
+				}
+				eliminated += n
 			}
 		}
 	}
