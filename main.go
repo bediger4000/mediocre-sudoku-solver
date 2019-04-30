@@ -63,25 +63,17 @@ func main() {
 
 		if doHiddenSubset {
 			// m number of hidden pairs discovered
-			m := bd.HiddenPair(announceSolution)
-			if totalFilled == 0 && m > 0 {
-				totalFilled += bd.OnlyPossibility(announceSolution)
-				totalFilled += bd.BlockOnly(announceSolution)
-			}
+			totalFilled += bd.HiddenPair(announceSolution)
+		}
+
+		if doNakedSubset {
+			totalFilled += bd.NakedSubset()
 		}
 
 		if !testingOutput {
 			fmt.Printf("Filled in %d cells\n", totalFilled)
 			fmt.Printf(">>intermediate==\n")
 			bd.PrintBoard(os.Stdout)
-		}
-
-		if doNakedSubset {
-			if totalFilled == 0 {
-				if bd.NakedSubset() > 0 {
-					totalFilled = 1
-				}
-			}
 		}
 	}
 	if !testingOutput {
