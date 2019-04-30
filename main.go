@@ -66,7 +66,7 @@ func main() {
 		}
 
 		if doNakedSubset {
-			totalFilled += bd.NakedSubset()
+			totalFilled += bd.NakedSubset(announceSolution)
 		}
 
 		if !testingOutput {
