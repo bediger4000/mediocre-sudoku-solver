@@ -43,16 +43,17 @@ func ReadBoard(in io.Reader) *Board {
 				continue
 			}
 			n := int(c - '0')
-			if c == '_' {
+			if c == '_' || c == '.' {
 				n = 0
 			}
 			if n < 0 || n > 10 {
+				// Will this ever happen?
 				log.Fatalf("Numbers must be less than 10, greater than zero: %d (%c)\n", n, c)
 			}
 			if n != 0 {
 				bd[row][col].Value = n
 				bd[row][col].Solved = true
-				bd[row][col].Possible = []int{n}
+				bd[row][col].Possible = []int{}
 			}
 			col++
 		}

@@ -22,7 +22,7 @@ do
 
 	echo $B
 
-	if ./sudoku -f < $IN > $OUT
+	if ./sudoku -H -N -f < $IN > $OUT
 	then
 		if diff desired/$B $OUT > /dev/null
 		then
