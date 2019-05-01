@@ -2,13 +2,11 @@ package board
 
 import "fmt"
 
-var buddyThing []ThingType = []ThingType{RowThing, ColumnThing, BlockThing}
-
 func (bd *Board) BlockOnly(announceSolution bool) int {
 	found := 0
 	for neighborhoodNo, neighborhood := range Neighborhoods {
 		for buddiesNo, buddies := range neighborhood {
-			digitCount := bd.CountPossibleDigits(buddyThing[neighborhoodNo], buddiesNo)
+			digitCount := bd.CountPossibleDigits(things[neighborhoodNo].nType, buddiesNo)
 			for _, cell := range buddies {
 				row, col := cell.X, cell.Y
 				if bd[row][col].Solved {
