@@ -105,10 +105,14 @@ func main() {
 	if !testingOutput {
 		if bd.IncompleteSolution() {
 			fmt.Printf("===Incomplete Solution===\n")
-			bd.CheckIntermediateValidity()
+			if !bd.CheckIntermediateValidity() {
+				fmt.Printf("!!! Invalid !!!\n")
+			}
 		} else {
 			fmt.Printf("===Complete Solution===\n")
-			bd.CheckValidity()
+			if !bd.CheckValidity() {
+				fmt.Printf("!!! Invalid !!!\n")
+			}
 		}
 	}
 }
