@@ -19,8 +19,9 @@ type CellCoord struct {
 }
 
 type House [9]CellCoord
+type Houses [9]House
 
-var Blocks [9]House = [9]House{
+var Blocks Houses = Houses{
 	House{CellCoord{X: 0, Y: 0}, CellCoord{X: 0, Y: 1}, CellCoord{X: 0, Y: 2}, CellCoord{X: 1, Y: 0}, CellCoord{X: 1, Y: 1}, CellCoord{X: 1, Y: 2}, CellCoord{X: 2, Y: 0}, CellCoord{X: 2, Y: 1}, CellCoord{X: 2, Y: 2}},
 	House{CellCoord{X: 0, Y: 3}, CellCoord{X: 0, Y: 4}, CellCoord{X: 0, Y: 5}, CellCoord{X: 1, Y: 3}, CellCoord{X: 1, Y: 4}, CellCoord{X: 1, Y: 5}, CellCoord{X: 2, Y: 3}, CellCoord{X: 2, Y: 4}, CellCoord{X: 2, Y: 5}},
 	House{CellCoord{X: 0, Y: 6}, CellCoord{X: 0, Y: 7}, CellCoord{X: 0, Y: 8}, CellCoord{X: 1, Y: 6}, CellCoord{X: 1, Y: 7}, CellCoord{X: 1, Y: 8}, CellCoord{X: 2, Y: 6}, CellCoord{X: 2, Y: 7}, CellCoord{X: 2, Y: 8}},
@@ -32,7 +33,7 @@ var Blocks [9]House = [9]House{
 	House{CellCoord{X: 6, Y: 6}, CellCoord{X: 6, Y: 7}, CellCoord{X: 6, Y: 8}, CellCoord{X: 7, Y: 6}, CellCoord{X: 7, Y: 7}, CellCoord{X: 7, Y: 8}, CellCoord{X: 8, Y: 6}, CellCoord{X: 8, Y: 7}, CellCoord{X: 8, Y: 8}},
 }
 
-var Columns [9]House = [9]House{
+var Columns Houses = Houses{
 	House{CellCoord{0, 0}, CellCoord{1, 0}, CellCoord{2, 0}, CellCoord{3, 0}, CellCoord{4, 0}, CellCoord{5, 0}, CellCoord{6, 0}, CellCoord{7, 0}, CellCoord{8, 0}},
 	House{CellCoord{0, 1}, CellCoord{1, 1}, CellCoord{2, 1}, CellCoord{3, 1}, CellCoord{4, 1}, CellCoord{5, 1}, CellCoord{6, 1}, CellCoord{7, 1}, CellCoord{8, 1}},
 	House{CellCoord{0, 2}, CellCoord{1, 2}, CellCoord{2, 2}, CellCoord{3, 2}, CellCoord{4, 2}, CellCoord{5, 2}, CellCoord{6, 2}, CellCoord{7, 2}, CellCoord{8, 2}},
@@ -44,7 +45,7 @@ var Columns [9]House = [9]House{
 	House{CellCoord{0, 8}, CellCoord{1, 8}, CellCoord{2, 8}, CellCoord{3, 8}, CellCoord{4, 8}, CellCoord{5, 8}, CellCoord{6, 8}, CellCoord{7, 8}, CellCoord{8, 8}},
 }
 
-var Rows [9]House = [9]House{
+var Rows Houses = Houses{
 	House{CellCoord{0, 0}, CellCoord{0, 1}, CellCoord{0, 2}, CellCoord{0, 3}, CellCoord{0, 4}, CellCoord{0, 5}, CellCoord{0, 6}, CellCoord{0, 7}, CellCoord{0, 8}},
 	House{CellCoord{1, 0}, CellCoord{1, 1}, CellCoord{1, 2}, CellCoord{1, 3}, CellCoord{1, 4}, CellCoord{1, 5}, CellCoord{1, 6}, CellCoord{1, 7}, CellCoord{1, 8}},
 	House{CellCoord{2, 0}, CellCoord{2, 1}, CellCoord{2, 2}, CellCoord{2, 3}, CellCoord{2, 4}, CellCoord{2, 5}, CellCoord{2, 6}, CellCoord{2, 7}, CellCoord{2, 8}},
