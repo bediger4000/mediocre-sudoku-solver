@@ -35,7 +35,7 @@ func ReadBoard(in io.Reader) *Board {
 		if buf[0] == '#' {
 			continue
 		}
-		buf = bytes.Trim(buf, " \t\n")
+		buf = bytes.Trim(buf, " \t\n\r")
 
 		col := 0
 		for _, c := range buf {
