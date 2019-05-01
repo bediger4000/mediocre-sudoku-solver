@@ -7,19 +7,19 @@ func (bd *Board) BlockOnly(announceSolution bool) int {
 	for blockno, block := range Blocks {
 		digitCount := bd.CountPossibleDigits(BlockThing, blockno)
 
-		for digit, count := range digitCount {
-			if count == 1 {
-				for _, cell := range block {
-					for _, possibleDigit := range bd[cell.X][cell.Y].Possible {
-						if possibleDigit == digit {
-							if announceSolution {
-								fmt.Printf("Mark <%d,%d> solved with %d, only possible digit for block\n", cell.X, cell.Y, digit)
-							}
-							bd.MarkSolved(cell.X, cell.Y, digit)
-							found++
-							break
-						}
+		for _, cell := range block {
+			row, col := cell.X, cell.Y
+			if bd[row][col].Solved {
+				continue
+			}
+			for _, possibleDigit := range bd[row][col].Possible {
+				if digitCount[possibleDigit] == 1 {
+					if announceSolution {
+						fmt.Printf("Mark <%d,%d> solved with %d, only possible digit for block\n", row, col, possibleDigit)
 					}
+					bd.MarkSolved(row, col, possibleDigit)
+					found++
+					break
 				}
 			}
 		}
