@@ -15,12 +15,14 @@ func main() {
 	var testingOutput bool
 	var doNakedSubset bool
 	var doHiddenPair bool
+	var validateOnly bool
 	flag.BoolVar(&printPossible, "c", false, "on incomplete solution, print digit possibilities")
 	flag.BoolVar(&printPossibleExit, "C", false, "read input board, print digit possibilities, exit")
 	flag.BoolVar(&announceSolution, "a", false, "announce solutions of cells")
 	flag.BoolVar(&testingOutput, "f", false, "final solution output only")
 	flag.BoolVar(&doNakedSubset, "N", false, "perform naked subset solving")
 	flag.BoolVar(&doHiddenPair, "H", false, "perform hidden pair elimination")
+	flag.BoolVar(&validateOnly, "v", false, "validate the input board, then exit")
 	psOutputNamePtr := flag.String("p", "", "PostScript output file name")
 	flag.Parse()
 
@@ -30,6 +32,27 @@ func main() {
 
 	bd := board.ReadBoard(os.Stdin)
 	board.ValidateCells()
+
+	if validateOnly {
+		var sentence string
+		if bd.IncompleteSolution() {
+			phrase := "Incomplete Solution, "
+			suffix := "invalid\n"
+			if bd.CheckIntermediateValidity() {
+				suffix = "valid\n"
+			}
+			sentence = phrase + suffix
+		} else {
+			phrase := "Complete Solution, "
+			suffix := "invalid\n"
+			if bd.CheckValidity() {
+				suffix = "valid\n"
+			}
+			sentence = phrase + suffix
+		}
+		fmt.Printf(sentence)
+		return
+	}
 
 	if *psOutputNamePtr != "" {
 		fd, err := os.Create(*psOutputNamePtr)
