@@ -57,6 +57,8 @@ var Rows Houses = Houses{
 	House{CellCoord{8, 0}, CellCoord{8, 1}, CellCoord{8, 2}, CellCoord{8, 3}, CellCoord{8, 4}, CellCoord{8, 5}, CellCoord{8, 6}, CellCoord{8, 7}, CellCoord{8, 8}},
 }
 
+var Neighborhoods [3]Houses = [3]Houses{Rows, Columns, Blocks}
+
 var Cells []*Cell
 
 type ThingType int
@@ -66,3 +68,14 @@ const (
 	ColumnThing ThingType = iota
 	BlockThing  ThingType = iota
 )
+
+type NeighborhoodType struct {
+	nType ThingType
+	nName string
+}
+
+var things [3]NeighborhoodType = [3]NeighborhoodType{
+	NeighborhoodType{RowThing, "Row"},
+	NeighborhoodType{ColumnThing, "Col"},
+	NeighborhoodType{BlockThing, "Block"},
+}
