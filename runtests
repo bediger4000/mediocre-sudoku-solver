@@ -26,7 +26,10 @@ do
 	then
 		if diff desired/$B $OUT > /dev/null
 		then
-			:
+			if grep -q _ $OUT
+			then
+				echo "Incomplete desired solution"
+		    fi
 		else
 			echo "Problem with test $B"
 			./sudoku -v < output/$B
