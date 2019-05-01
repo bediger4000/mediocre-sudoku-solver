@@ -19,7 +19,7 @@ func (bd *Board) CheckIntermediateValidity() bool {
 		}
 		for digit, count := range digitCounts {
 			if digit != 0 && count > 1 {
-				fmt.Printf("Row %d has %d %d digits\n", row, count, digit)
+				fmt.Printf("Row %d has %d %d digits\n", row, count, digit+1)
 				return false
 			}
 		}
@@ -71,33 +71,18 @@ func (bd *Board) CheckIntermediateValidity() bool {
 
 func (bd *Board) CheckValidity() bool {
 	valid := true
-	for row := 0; row < 9; row++ {
-		sum := 0
-		for col := 0; col < 9; col++ {
-			sum += bd[row][col].Value
-		}
-		if sum != 45 {
-			valid = false
-		}
-	}
-	for col := 0; col < 9; col++ {
-		sum := 0
-		for row := 0; row < 9; row++ {
-			sum += bd[row][col].Value
-		}
-		if sum != 45 {
-			valid = false
+	for neighborNo, neighborhood := range Neighborhoods { // neighborhod is Rows, Columns, Blocks
+		thingType := things[neighborNo]     // does this neighborhood comprise a row, col or block?
+		for buddyNo := range neighborhood { // buddies is a particular row, col, or block
+			digitCount := bd.CountSolvedDigits(thingType.nType, buddyNo)
+			for digit, count := range digitCount[1:] {
+				if count != 1 {
+					fmt.Printf("%s %d has %d %d digits\n", thingType.nName, buddyNo, count, digit+1)
+					valid = false
+				}
+			}
 		}
 	}
 
-	for _, block := range Blocks {
-		sum := 0
-		for _, cell := range block {
-			sum += bd[cell.X][cell.Y].Value
-		}
-		if sum != 45 {
-			valid = false
-		}
-	}
 	return valid
 }
