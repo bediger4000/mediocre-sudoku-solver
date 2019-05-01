@@ -13,7 +13,7 @@ func main() {
 	board.ValidateCells()
 
 	n := bd.HiddenPair(true)
-	fmt.Printf("Found %d hidden subsets\n", n)
+	fmt.Printf("Eliminated %d 6 possible digits\n", n)
 
 	if len(os.Args) > 1 {
 		psFileName := os.Args[1]
