@@ -24,7 +24,10 @@ do
 
 	if ./sudoku -H -N -f < $IN > $OUT
 	then
-		if diff desired/$B $OUT > /dev/null
+		if [[ ! -f desired/$B ]]
+		then
+			echo "No desired output for $IN"
+		elif diff desired/$B $OUT > /dev/null
 		then
 			if grep -q _ $OUT
 			then
