@@ -2,6 +2,7 @@ package board
 
 import "fmt"
 
+// XYwing disgusts me. Really deeply nested.
 func (bd *Board) XYwing(announce bool) int {
 	eliminated := 0
 	// Loop over Rows, Columns, Blocks
@@ -30,8 +31,6 @@ func (bd *Board) XYwing(announce bool) int {
 							commonDigit, diffDigit1, diffDigit2, found := checkCommon(poss1, poss2)
 							if found {
 								// a common digit, and two non-common digits
-								fmt.Printf("%s %d, <%d,%d>/<%d,%d>: common digit %d, non-common digits %d & %d\n",
-									things[neighborhoodNo].nName, buddyNumber, row, col, row2, col2, commonDigit, diffDigit1, diffDigit2)
 								// Find a non-common digits in a column, if neighborhoodNo == 0 (Rows),
 								// find a non-common digits in a row, if neighborhoodNo == 1 (Columns),
 								// find a non-common digits in a row or a colum, if neighborhoodNo == 2 (Blocks)
@@ -41,14 +40,22 @@ func (bd *Board) XYwing(announce bool) int {
 										if r == row {
 											continue
 										}
+
 										if len(bd[r][col].Possible) == 2 {
 											if bd[r][col].Possible[0] == diffDigit1 && bd[r][col].Possible[1] == diffDigit2 {
-												fmt.Printf("  <%d,%d> contains the non-common digits %d and %d\n", r, col, bd[r][col].Possible[0], bd[r][col].Possible[2])
+												fmt.Printf("%s %d, <%d,%d>/<%d,%d>: common digit %d, non-common digits %d & %d\n",
+													things[neighborhoodNo].nName, buddyNumber, row, col, row2, col2, commonDigit, diffDigit1, diffDigit2)
+												fmt.Printf("  <%d,%d> contains the non-common digits %d and %d\n", r, col, bd[r][col].Possible[0], bd[r][col].Possible[1])
+												// bd[row][col]: wings bd[row2][col2], bd[r][col]
 											}
 										}
+
 										if len(bd[r][col2].Possible) == 2 {
 											if bd[r][col2].Possible[0] == diffDigit1 && bd[r][col2].Possible[1] == diffDigit2 {
-												fmt.Printf("  <%d,%d> contains the non-common digits %d and %d\n", r, col2, bd[r][col2].Possible[0], bd[r][col2].Possible[2])
+												fmt.Printf("%s %d, <%d,%d>/<%d,%d>: common digit %d, non-common digits %d & %d\n",
+													things[neighborhoodNo].nName, buddyNumber, row, col, row2, col2, commonDigit, diffDigit1, diffDigit2)
+												fmt.Printf("  <%d,%d> contains the non-common digits %d and %d\n", r, col2, bd[r][col2].Possible[0], bd[r][col2].Possible[1])
+												// bd[row][col]: wings bd[row2][col2], bd[r][col2]
 											}
 										}
 									}
@@ -66,12 +73,36 @@ func (bd *Board) XYwing(announce bool) int {
 										}
 										if len(bd[r][col].Possible) == 2 {
 											if bd[r][col].Possible[0] == diffDigit1 && bd[r][col].Possible[1] == diffDigit2 {
-												fmt.Printf("  <%d,%d> contains the non-common digits %d and %d\n", r, col, bd[r][col].Possible[0], bd[r][col].Possible[1])
+												if announce {
+													fmt.Printf("%s %d, <%d,%d>/<%d,%d>: common digit %d, non-common digits %d & %d\n",
+														things[neighborhoodNo].nName, buddyNumber, row, col, row2, col2, commonDigit, diffDigit1, diffDigit2)
+													fmt.Printf("  <%d,%d> contains the non-common digits %d and %d\n", r, col, bd[r][col].Possible[0], bd[r][col].Possible[1])
+												}
+												eliminateDigit, _, _, foundEliminate := checkCommon(bd[row2][col2].Possible, bd[r][col].Possible)
+												if foundEliminate {
+													if announce {
+														fmt.Printf("  Could eliminate %d from any cells visible to both <%d,%d> & <%d,%d>\n",
+															eliminateDigit, row2, col2, r, col)
+													}
+													bd.eliminateMutuallyVisible(eliminateDigit, row2, col2, r, col, announce)
+												}
 											}
 										}
 										if len(bd[r][col2].Possible) == 2 {
 											if bd[r][col2].Possible[0] == diffDigit1 && bd[r][col2].Possible[1] == diffDigit2 {
-												fmt.Printf("  <%d,%d> contains the non-common digits %d and %d\n", r, col2, bd[r][col2].Possible[0], bd[r][col2].Possible[1])
+												if announce {
+													fmt.Printf("%s %d, <%d,%d>/<%d,%d>: common digit %d, non-common digits %d & %d\n",
+														things[neighborhoodNo].nName, buddyNumber, row, col, row2, col2, commonDigit, diffDigit1, diffDigit2)
+													fmt.Printf("  <%d,%d> contains the non-common digits %d and %d\n", r, col2, bd[r][col2].Possible[0], bd[r][col2].Possible[1])
+												}
+												eliminateDigit, _, _, foundEliminate := checkCommon(bd[row2][col2].Possible, bd[r][col2].Possible)
+												if foundEliminate {
+													if announce {
+														fmt.Printf("  Could eliminate %d from any cells visible to both <%d,%d> & <%d,%d>\n",
+															eliminateDigit, row2, col2, r, col2)
+													}
+													bd.eliminateMutuallyVisible(eliminateDigit, row2, col2, r, col2, announce)
+												}
 											}
 										}
 									}
@@ -107,4 +138,44 @@ func checkCommon(poss1 []int, poss2 []int) (commonDigit int, noncommon1 int, non
 		foundThem = false
 	}
 	return commonDigit, noncommon1, noncommon2, foundThem
+}
+
+func (bd *Board) eliminateMutuallyVisible(digit, x0, y0, x1, y1 int, announce bool) int {
+	eliminated := 0
+	// if bd[x0][y0].BlockNo == bd[x1][y1].BlockNo {
+	if announce {
+		fmt.Printf("Elminate %d from <%d,%d> & <%d,%d> mutuals\n", digit, x0, y0, x1, y1)
+	}
+	if !bd[x0][y1].Solved {
+		if bd.SpliceOut(x0, y1, digit) > 0 {
+			eliminated++
+			if announce {
+				fmt.Printf("Eliminated %d from <%d,%d> possibles\n", digit, x0, y1)
+			}
+		}
+	}
+	if !bd[x1][y0].Solved {
+		if bd.SpliceOut(x1, y0, digit) > 0 {
+			eliminated++
+			if announce {
+				fmt.Printf("Eliminated %d from <%d,%d> possibles\n", digit, x1, y0)
+			}
+		}
+	}
+	if bd[x0][y0].BlockNo == bd[x1][y1].BlockNo {
+		for _, cell := range Blocks[bd[x0][y0].BlockNo] {
+			if cell.X == x0 && cell.Y == y0 || cell.X == x1 && cell.Y == y1 {
+				continue
+			}
+			if !bd[cell.X][cell.Y].Solved {
+				if bd.SpliceOut(cell.X, cell.Y, digit) > 0 {
+					eliminated++
+					if announce {
+						fmt.Printf("Eliminated %d from <%d,%d> possibles\n", digit, cell.X, cell.Y)
+					}
+				}
+			}
+		}
+	}
+	return eliminated
 }
