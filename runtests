@@ -22,7 +22,7 @@ do
 
 	echo $B
 
-	if ./sudoku -H -N -f < $IN > $OUT
+	if ./sudoku -X -H -N -f < $IN > $OUT
 	then
 		if [[ ! -f desired/$B ]]
 		then
