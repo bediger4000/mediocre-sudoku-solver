@@ -84,7 +84,7 @@ func (bd *Board) XYwing(announce bool) int {
 														fmt.Printf("  Could eliminate %d from any cells visible to both <%d,%d> & <%d,%d>\n",
 															eliminateDigit, row2, col2, r, col)
 													}
-													bd.eliminateMutuallyVisible(eliminateDigit, row2, col2, r, col, announce)
+													eliminated += bd.eliminateMutuallyVisible(eliminateDigit, row2, col2, r, col, announce)
 												}
 											}
 										}
@@ -101,7 +101,7 @@ func (bd *Board) XYwing(announce bool) int {
 														fmt.Printf("  Could eliminate %d from any cells visible to both <%d,%d> & <%d,%d>\n",
 															eliminateDigit, row2, col2, r, col2)
 													}
-													bd.eliminateMutuallyVisible(eliminateDigit, row2, col2, r, col2, announce)
+													eliminated += bd.eliminateMutuallyVisible(eliminateDigit, row2, col2, r, col2, announce)
 												}
 											}
 										}
