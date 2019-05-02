@@ -37,7 +37,10 @@ do
 			echo "Problem with test $B"
 			./sudoku -v < output/$B
 			echo "diff {output,desired}/$B"
-			echo "./cmp {output,desired}/$B"
+			if [[ -x ./cmp ]]
+			then
+				echo "./cmp {output,desired}/$B"
+			fi
 		fi
 	else
 		echo "Problem with sudoku on $IN: $?"
