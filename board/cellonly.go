@@ -15,7 +15,7 @@ func (bd *Board) BlockOnly(announceSolution bool) int {
 				for _, possibleDigit := range bd[row][col].Possible {
 					if digitCount[possibleDigit] == 1 {
 						if announceSolution {
-							fmt.Printf("Mark <%d,%d> solved with %d, only possible digit for block\n", row, col, possibleDigit)
+							fmt.Printf("Mark <%d,%d> solved with %d, only possible digit for %s\n", row, col, possibleDigit, things[neighborhoodNo].nName)
 						}
 						bd.MarkSolved(row, col, possibleDigit)
 						found++
