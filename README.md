@@ -24,7 +24,14 @@ It will note any incomplete solutions, or inputs that don't have a corresponding
 
 ### Other things it can do
 
-It can definitely read ".sdk" format inputs
+It can definitely read ".sdk" format inputs.
+
+It can write out only the final solution using the "-f" flag:
+
+    ./sudoku -f < tests/16 > 16x
+    ./sudoku < 16x
+
+This is useful for testing solutions against known good answers.
 
 #### PostScript representations
 
