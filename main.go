@@ -32,7 +32,16 @@ func main() {
 		announceSolution = false
 	}
 
-	bd := board.ReadBoard(os.Stdin)
+	fin := os.Stdin
+	if flag.NArg() > 0 {
+		var err error
+		fin, err = os.Open(flag.Arg(0))
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	bd := board.ReadBoard(fin)
 	board.ValidateCells()
 
 	if validateOnly {
