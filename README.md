@@ -15,6 +15,8 @@ I decided to write my own solver to understand the methods.
 
 The `sudoku` executable reads boards from stdin,
 writes progress and any solution on stdout.
+It can also read from files that are named by the final
+command line argument.
 
 Partial output boards can be used as input,
 by editing out all the non-board material.
@@ -35,8 +37,8 @@ This is useful for testing solutions against known good answers.
 
 #### PostScript representations
 
-    $ ./sudoku -p in11.ps < tests/in11
-    $ ./sudoku -C -p in11possible.ps < tests/in11
+    $ ./sudoku -p in11.ps  tests/in11
+    $ ./sudoku -C -p in11possible.ps  tests/in11
 
 The "-p filename" flag will produce a printable PostScript file
 representing the input board.
