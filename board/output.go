@@ -28,6 +28,9 @@ func ReadBoard(in io.Reader) *Board {
 		buf, err := r.ReadBytes('\n')
 		if err != nil {
 			if err == io.EOF {
+				if row != 9 {
+					log.Fatalf("Premature end-of-file at row %d\n", row)
+				}
 				break
 			}
 			log.Fatal(err)
