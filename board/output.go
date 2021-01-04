@@ -60,6 +60,9 @@ func ReadBoard(in io.Reader) *Board {
 			}
 			col++
 		}
+		if col != 9 {
+			log.Fatalf("Row %d had %d cols\n", row+1, col)
+		}
 		row++
 	}
 
